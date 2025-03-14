@@ -9,7 +9,7 @@ module ViteRailsLink
     end
 
     def read_config
-      @read_config ||= JSON.parse(`bun run #{__dir__}/dev_server_config_loader.js`)
+      @read_config ||= JSON.parse(`bun run #{__dir__}/dev_server_config_loader.js "#{Rails.root.join("vite.config.ts")}"`)
     rescue => e
       raise "Failed to read Vite config: #{e.message}"
     end
