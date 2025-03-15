@@ -23,7 +23,7 @@ module ViteRailsLink
     end
 
     def server_port
-      @config.dig("server", "port") || raise("Please set the `server.port` in your vite.config.ts file")
+      @config.dig("server", "port") || 5173
     end
 
     def base

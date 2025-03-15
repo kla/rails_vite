@@ -60,7 +60,7 @@ class DevServerConfigTest < Minitest::Test
     assert_equal "localhost", config.server_host
   end
 
-  def test_server_port_raises_error
+  def test_server_port_default
     config_without_port = {
       "server" => {
         "host" => "0.0.0.0"
@@ -71,9 +71,7 @@ class DevServerConfigTest < Minitest::Test
     ViteRailsLink::DevServerConfig.any_instance.stubs(:read_config).returns(config_without_port)
     config = ViteRailsLink::DevServerConfig.new
 
-    assert_raises(RuntimeError) do
-      config.server_port
-    end
+    assert_equal 5173, config.server_port
   end
 
   def test_base_raises_error
