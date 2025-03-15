@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rails/railtie"
+require "rails/engine"
 require_relative "middleware"
 require_relative "view_helper"
 
