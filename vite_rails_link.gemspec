@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
     file.match(%r{^(test|spec|features)/}) || ::File.directory?(file)
   end
 
-  spec.required_ruby_version = ">= 2.7.0"
-  spec.add_dependency("railties", ">= 6.0.0")
+  spec.required_ruby_version = ">= 3.0.0"
+  spec.add_dependency("railties", ">= 7.2.0")
   spec.add_dependency("faye-websocket", ">= 0.11.0")
 end

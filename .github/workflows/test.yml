@@ -1,0 +1,44 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_FROZEN: 'false'
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: ['3.2', '3.3', '3.4']
+        rails-version: ['7.2', '8.0']
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Ruby ${{ matrix.ruby-version }}
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true # Enable bundler caching
+        cache-version: ${{ matrix.ruby-version }}-${{ matrix.rails-version }} # Custom cache key
+
+    - name: Get Bun version
+      id: bun-version
+      run: echo "BUN_VERSION=$(cat .bun-version | tr -d '\n')" >> $GITHUB_OUTPUT
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: ${{ steps.bun-version.outputs.BUN_VERSION }}
+
+    - name: Set Rails version
+      run: |
+        bundle add railties --version "~> ${{ matrix.rails-version }}"
+
+    - name: Run tests
+      run: bin/test
