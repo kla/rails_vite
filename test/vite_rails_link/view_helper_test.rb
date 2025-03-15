@@ -82,6 +82,10 @@ class ViewHelperTest < Minitest::Test
 
     expected = '<script type="module" src="/vite/src/main.ts"></script>'
     assert_equal expected, @view.vite_javascript_tag("src/main.ts")
+
+    # Test default .js extension
+    expected = '<script type="module" src="/vite/src/main.js"></script>'
+    assert_equal expected, @view.vite_javascript_tag("src/main")
   end
 
   def test_vite_javascript_tag_in_production
@@ -91,6 +95,10 @@ class ViewHelperTest < Minitest::Test
       "src/main.ts" => {
         "file" => "assets/main-1234abcd.js",
         "css" => ["assets/main-5678efgh.css"]
+      },
+      "src/other.js" => {
+        "file" => "assets/other-9876fedc.js",
+        "css" => ["assets/other-5432dcba.css"]
       }
     }
 
@@ -98,7 +106,11 @@ class ViewHelperTest < Minitest::Test
 
     expected = '<script type="module" src="/vite/assets/main-1234abcd.js"></script>' +
                '<link rel="stylesheet" href="/vite/assets/main-5678efgh.css">'
-
     assert_equal expected, @view.vite_javascript_tag("src/main.ts")
+
+    # Test default .js extension
+    expected = '<script type="module" src="/vite/assets/other-9876fedc.js"></script>' +
+               '<link rel="stylesheet" href="/vite/assets/other-5432dcba.css">'
+    assert_equal expected, @view.vite_javascript_tag("src/other")
   end
 end
