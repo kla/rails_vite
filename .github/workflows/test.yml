@@ -27,18 +27,21 @@ jobs:
         bundler-cache: true # Enable bundler caching
         cache-version: ${{ matrix.ruby-version }}-${{ matrix.rails-version }} # Custom cache key
 
-    - name: Get Bun version
-      id: bun-version
-      run: echo "BUN_VERSION=$(cat .bun-version | tr -d '\n')" >> $GITHUB_OUTPUT
+    - name: Get Node version
+      id: node-version
+      run: echo "NODE_VERSION=$(cat .node-version | tr -d '\n')" >> $GITHUB_OUTPUT
 
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
       with:
-        bun-version: ${{ steps.bun-version.outputs.BUN_VERSION }}
+        node-version: ${{ steps.node-version.outputs.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install npm dependencies
+      run: npm install
 
     - name: Set Rails version
-      run: |
-        bundle add railties --version "~> ${{ matrix.rails-version }}"
+      run: bundle add railties --version "~> ${{ matrix.rails-version }}"
 
     - name: Run tests
       run: bin/test

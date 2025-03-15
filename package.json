@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun vite"
+    "dev": "vite"
   },
   "dependencies": {
   },

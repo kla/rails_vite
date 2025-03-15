@@ -12,8 +12,12 @@ module ViteRailsLink
       Rails.root.join("vite.config.ts")
     end
 
+    def js_runtime
+      ENV.fetch("VITE_RAILS_LINK_JS_RUNTIME", "node")
+    end
+
     def read_config
-      @read_config ||= JSON.parse(`bun run #{__dir__}/dev_server_config_loader.js "#{config_file}"`)
+      @read_config ||= JSON.parse(`#{js_runtime} #{__dir__}/dev_server_config_loader.js "#{config_file}"`)
     rescue => e
       raise "Failed to read Vite config: #{e.message}"
     end
