@@ -22,8 +22,12 @@ module ViteRailsLink
       raise "Failed to read Vite config: #{e.message}"
     end
 
+    def running_in_docker?
+      File.exist?("/.dockerenv")
+    end
+
     def server_host
-      @config.dig("server", "host") || "localhost"
+      @config.dig("server", "host") || (running_in_docker? ? "0.0.0.0" : "localhost")
     end
 
     def server_port

@@ -39,12 +39,27 @@ class DevServerConfigTest < Minitest::Test
       "base" => "/vite"
     }
 
-    ViteRailsLink::DevServerConfig.any_instance.stubs(:read_config).returns(config_without_host)
+    ViteRailsLink::DevServerConfig.any_instance.stubs(read_config: config_without_host, running_in_docker?: false)
     config = ViteRailsLink::DevServerConfig.new
 
     assert_equal "localhost", config.server_host
   end
 
+
+  def test_server_host_default_docker
+    # For default value tests, we still need to stub the config
+    config_without_host = {
+      "server" => {
+        "port" => 5173
+      },
+      "base" => "/vite"
+    }
+
+    ViteRailsLink::DevServerConfig.any_instance.stubs(read_config: config_without_host, running_in_docker?: true)
+    config = ViteRailsLink::DevServerConfig.new
+
+    assert_equal "0.0.0.0", config.server_host
+  end
   def test_server_port_default
     config_without_port = {
       "server" => {
