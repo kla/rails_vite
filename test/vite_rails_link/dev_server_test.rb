@@ -50,9 +50,6 @@ class DevServerTest < Minitest::Test
     # Mock the config_file method to return our fixture path
     ViteRailsLink::DevServerConfig.any_instance.stubs(:config_file).returns(Pathname.new(fixture_path))
 
-    # Mock the read_config method to return our fixture data
-    ViteRailsLink::DevServerConfig.any_instance.stubs(:read_config).returns(vite_config)
-
     @dev_server = ViteRailsLink::DevServer.new
   end
 

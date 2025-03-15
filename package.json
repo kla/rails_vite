@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun vite"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "vite": "^6.1.0"
+  }
+}

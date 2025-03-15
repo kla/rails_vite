@@ -12,24 +12,8 @@ class DevServerConfigTest < Minitest::Test
     # Set up Rails.root to point to our test directory for proper path resolution
     Rails.stubs(:root).returns(Pathname.new(File.expand_path("../", __dir__)))
 
-    # Create a Vite config that matches our fixture file
-    vite_config = {
-      "base" => "/vite",
-      "server" => {
-        "host" => "0.0.0.0",
-        "port" => 5173,
-        "allowedHosts" => ["localhost"],
-        "watch" => {
-          "ignored" => ["**/vite.config.ts"]
-        }
-      }
-    }
-
     # Mock the config_file method to return our fixture path
     ViteRailsLink::DevServerConfig.any_instance.stubs(:config_file).returns(Pathname.new(fixture_path))
-
-    # Mock the read_config method to return our fixture data
-    ViteRailsLink::DevServerConfig.any_instance.stubs(:read_config).returns(vite_config)
 
     @config = ViteRailsLink::DevServerConfig.new
   end
@@ -47,6 +31,7 @@ class DevServerConfigTest < Minitest::Test
   end
 
   def test_server_host_default
+    # For default value tests, we still need to stub the config
     config_without_host = {
       "server" => {
         "port" => 5173
