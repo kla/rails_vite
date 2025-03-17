@@ -34,16 +34,6 @@ class DevServerTest < Minitest::Test
     # Set up Rails.root to point to our test directory for proper path resolution
     Rails.stubs(:root).returns(Pathname.new(File.expand_path("../", __dir__)))
 
-    # Create a Vite config that matches our fixture file - using string keys
-    vite_config = {
-      "base" => "/vite",
-      "server" => {
-        "host" => "0.0.0.0",
-        "port" => 5173,
-        "allowedHosts" => ["localhost"]
-      }
-    }
-
     # Use the fixture vite.config.ts file
     fixture_path = File.expand_path("../fixtures/vite.config.ts", __dir__)
 

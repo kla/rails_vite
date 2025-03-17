@@ -29,7 +29,6 @@ module ViteRailsLink
         target_request.body_stream.rewind
       end
 
-      backend = env.delete("rack.backend") || "http://#{@host}:#{@port}" || source_request
       read_timeout = env.delete("http.read_timeout") || DEFAULT_READ_TIMEOUT
 
       http = Net::HTTP.new(@host, @port)
