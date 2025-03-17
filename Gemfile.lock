@@ -3,7 +3,7 @@ PATH
   specs:
     vite_rails_link (0.1.0)
       faye-websocket (>= 0.11.0)
-      railties (>= 7.2.0)
+      railties (>= 6.0.0)
 
 GEM
   remote: https://rubygems.org/
