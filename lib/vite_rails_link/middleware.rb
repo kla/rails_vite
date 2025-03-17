@@ -6,13 +6,10 @@ require_relative "web_socket_proxy"
 
 module ViteRailsLink
   class Middleware
-    KEEPALIVE_TIMEOUT = 15
-
     attr_reader :dev_server
 
     def initialize(app)
       @app = app
-      @clients = {}  # Use a hash to store client-server pairs
       @dev_server = DevServer.new
       @web_socket_proxy = ViteRailsLink::WebSocketProxy.new(dev_server.config.server_host, dev_server.config.server_port)
       @http_proxy = ViteRailsLink::HttpProxy.new(dev_server.config.server_host, dev_server.config.server_port)

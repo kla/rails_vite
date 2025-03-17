@@ -17,9 +17,12 @@ module ViteRailsLink
     end
 
     def read_config
-      @read_config ||= JSON.parse(`#{js_runtime} #{__dir__}/dev_server_config_loader.js "#{config_file}"`)
-    rescue => e
-      raise "Failed to read Vite config: #{e.message}"
+      @read_config ||= begin
+        command = "#{js_runtime} #{__dir__}/dev_server_config_loader.js '#{config_file}'"
+        JSON.parse(`#{command}`)
+      rescue => e
+        raise "#{command} failed: #{e.message}"
+      end
     end
 
     def running_in_docker?
