@@ -17,7 +17,6 @@ class DevServerTest < Minitest::Test
     # Set up a real configuration with test values
     @config = {
       debug: false,
-      auto_run_dev_server: true,
       lock_file: @lock_file,
       pid_file: @pid_file,
       log_file: @log_file,
@@ -76,7 +75,7 @@ class DevServerTest < Minitest::Test
   end
 
   def test_ensure_running_when_auto_run_disabled
-    Rails.configuration.x.vite_rails_link.stubs(:auto_run_dev_server).returns(false)
+    Rails.configuration.x.vite_rails_link.stubs(:dev_server_command).returns(nil)
 
     # We shouldn't check the port when auto_run is disabled
     @dev_server.stubs(:port_open?).never

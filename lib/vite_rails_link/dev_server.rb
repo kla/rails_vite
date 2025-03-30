@@ -23,16 +23,28 @@ module ViteRailsLink
       )
     end
 
+    def lock_file
+      Rails.configuration.x.vite_rails_link.lock_file.presence || Rails.root.join("tmp", "vite_dev_server.lock")
+    end
+
+    def pid_file
+      Rails.configuration.x.vite_rails_link.pid_file.presence || Rails.root.join("tmp", "vite_dev_server.pid")
+    end
+
+    def log_file
+      Rails.configuration.x.vite_rails_link.log_file.presence || Rails.root.join("log", "vite_dev_server.log")
+    end
+
     def ensure_running
-      return unless Rails.configuration.x.vite_rails_link.auto_run_dev_server
+      return if command.blank?
 
       # Fast check first - if port is open, we're good to go
       return if port_open?(config.server_host, config.server_port)
-      
-      FileUtils.mkdir_p(File.dirname(Rails.configuration.x.vite_rails_link.lock_file))
-      
+
+      FileUtils.mkdir_p(File.dirname(lock_file))
+
       # Use non-blocking lock to avoid hanging requests
-      File.open(Rails.configuration.x.vite_rails_link.lock_file, File::RDWR | File::CREAT) do |f|
+      File.open(lock_file, File::RDWR | File::CREAT) do |f|
         if f.flock(File::LOCK_EX | File::LOCK_NB)
           begin
             # Double-check port after acquiring lock
@@ -42,7 +54,7 @@ module ViteRailsLink
             end
           ensure
             f.flock(File::LOCK_UN)
-            File.unlink(Rails.configuration.x.vite_rails_link.lock_file) rescue nil
+            File.unlink(lock_file) rescue nil
           end
         else
           # Another process is handling it, just wait briefly
@@ -69,15 +81,15 @@ module ViteRailsLink
     end
 
     def start
-      cleanup_stale_process(Rails.configuration.x.vite_rails_link.pid_file)
-      launch_vite_server(Rails.configuration.x.vite_rails_link.pid_file)
+      cleanup_stale_process(pid_file)
+      launch_vite_server(pid_file)
       wait_for_server_start
     end
 
     # Stop existing server if running
     def stop
-      if File.exist?(Rails.configuration.x.vite_rails_link.pid_file)
-        pid = File.read(Rails.configuration.x.vite_rails_link.pid_file).to_i
+      if File.exist?(pid_file)
+        pid = File.read(pid_file).to_i
         terminate_process(pid) if pid > 0
       end
     end
@@ -114,7 +126,7 @@ module ViteRailsLink
       begin
         Process.getpgid(pid)
         debug_log("Server", "Killing Vite server process group #{pid}")
-        
+
         # Kill the entire process group
         Process.kill('-TERM', pid) rescue nil
         sleep 0.5
@@ -124,24 +136,24 @@ module ViteRailsLink
         debug_log("Server", "Process #{pid} is not a valid PID")
         return
       end
-      
+
       # Wait briefly to ensure processes are cleaned up
       sleep 0.2
     end
 
     def command
-      Rails.configuration.x.vite_rails_link.dev_server_command.presence || "npm run dev"
+      Rails.configuration.x.vite_rails_link.dev_server_command.presence
     end
 
     def launch_vite_server(pid_path)
       debug_log("Server", "Launching '#{command}'")
       pid = Process.spawn(
         "cd #{Rails.root} && #{command}",
-        out: Rails.configuration.x.vite_rails_link.log_file.to_s,
-        err: Rails.configuration.x.vite_rails_link.log_file.to_s,
+        out: log_file.to_s,
+        err: log_file.to_s,
         pgroup: true  # Create a new process group
       )
-      
+
       Process.detach(pid)
       File.write(pid_path, pid.to_s)
       debug_log("Server", "Started Vite server with PID #{pid}")
