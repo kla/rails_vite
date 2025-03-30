@@ -33,8 +33,9 @@ class ViewHelperTest < Minitest::Test
     # Mock Rails.env
     Rails.stubs(:env).returns(ActiveSupport::StringInquirer.new("development"))
 
-    # Reset thread variable
-    Thread.current[:vite_manifest] = nil
+    # Reset class variables in ViewHelper
+    ViteRailsLink::ViewHelper.class_variable_set(:@@vite_manifest, nil)
+    ViteRailsLink::ViewHelper.class_variable_set(:@@manifest_last_modified, nil)
   end
 
   def test_vite_manifest
@@ -55,6 +56,8 @@ class ViewHelperTest < Minitest::Test
   end
 
   def test_vite_manifest_file_not_found
+    # Mock both File.exist? and File.read
+    File.stubs(:exist?).with(@manifest_path).returns(true)
     File.stubs(:read).with(@manifest_path).raises(Errno::ENOENT.new("File not found"))
 
     error = assert_raises(Errno::ENOENT) do
