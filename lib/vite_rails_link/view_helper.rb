@@ -2,8 +2,27 @@
 
 module ViteRailsLink
   module ViewHelper
+    @@vite_manifest = nil
+    @@manifest_last_modified = nil
+    @@manifest_mutex = Mutex.new
+
     def vite_manifest
-      Thread.current[:vite_manifest] ||= JSON.parse(File.read(Rails.root.join("public/vite/.vite/manifest.json")))
+      manifest_path = Rails.root.join("public/vite/.vite/manifest.json")
+      current_mtime = File.exist?(manifest_path) ? File.mtime(manifest_path) : nil
+
+      # Quick check without mutex
+      return @@vite_manifest if @@vite_manifest && current_mtime == @@manifest_last_modified
+
+      # If we need to update, use mutex to ensure thread safety
+      @@manifest_mutex.synchronize do
+        # Check again within the mutex to avoid race conditions
+        if @@vite_manifest.nil? || current_mtime != @@manifest_last_modified
+          @@manifest_last_modified = current_mtime
+          @@vite_manifest = JSON.parse(File.read(manifest_path))
+        end
+      end
+
+      @@vite_manifest
     rescue Errno::ENOENT => e
       raise e, "Vite manifest not found and is required for production. Please enable `build.manifest` (see https://vite.dev/guide/backend-integration)"
     end
