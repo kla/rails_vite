@@ -4,10 +4,8 @@ require "socket"
 
 module RailsVite
   class DevServer
-    attr_reader :config
-
-    def initialize
-      @config = DevServerConfig.new
+    def config
+      @config ||= DevServerConfig.new
     end
 
     def debug_log(type, message)

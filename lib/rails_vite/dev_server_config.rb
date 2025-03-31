@@ -12,13 +12,13 @@ module RailsVite
       Rails.root.join("vite.config.ts")
     end
 
-    def js_runtime
-      ENV.fetch("rails_vite_JS_RUNTIME", "node")
+    def js_command
+      Rails.configuration.x.rails_vite.js_command.presence || "node"
     end
 
     def read_config
       @read_config ||= begin
-        command = "#{js_runtime} #{__dir__}/dev_server_config_loader.js '#{config_file}'"
+        command = "#{js_command} #{__dir__}/dev_server_config_loader.js '#{config_file}'"
         JSON.parse(`#{command}`)
       rescue => e
         raise "#{command} failed: #{e.message}"
