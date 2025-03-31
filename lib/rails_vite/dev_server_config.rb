@@ -2,7 +2,7 @@
 
 require "json"
 
-module ViteRailsLink
+module RailsVite
   class DevServerConfig
     def initialize
       @config = read_config
@@ -13,7 +13,7 @@ module ViteRailsLink
     end
 
     def js_runtime
-      ENV.fetch("VITE_RAILS_LINK_JS_RUNTIME", "node")
+      ENV.fetch("rails_vite_JS_RUNTIME", "node")
     end
 
     def read_config

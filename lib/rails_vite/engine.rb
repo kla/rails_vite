@@ -4,11 +4,11 @@ require "rails/engine"
 require_relative "middleware"
 require_relative "view_helper"
 
-module ViteRailsLink
+module RailsVite
   class Engine < ::Rails::Engine
-    initializer "vite_rails_link.view_helper" do
+    initializer "rails_vite.view_helper" do
       ActiveSupport.on_load(:action_view) do
-        include ViteRailsLink::ViewHelper
+        include RailsVite::ViewHelper
       end
     end
   end

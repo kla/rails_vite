@@ -5,7 +5,7 @@ require "json"
 
 class ViewHelperTest < Minitest::Test
   class DummyView
-    include ViteRailsLink::ViewHelper
+    include RailsVite::ViewHelper
 
     def tag
       Tag.new
@@ -34,8 +34,8 @@ class ViewHelperTest < Minitest::Test
     Rails.stubs(:env).returns(ActiveSupport::StringInquirer.new("development"))
 
     # Reset class variables in ViewHelper
-    ViteRailsLink::ViewHelper.class_variable_set(:@@vite_manifest, nil)
-    ViteRailsLink::ViewHelper.class_variable_set(:@@manifest_last_modified, nil)
+    RailsVite::ViewHelper.class_variable_set(:@@vite_manifest, nil)
+    RailsVite::ViewHelper.class_variable_set(:@@manifest_last_modified, nil)
   end
 
   def test_vite_manifest

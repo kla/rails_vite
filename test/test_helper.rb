@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
-require "vite_rails_link"
+require "rails_vite"
 
 require "minitest/autorun"
 require "minitest/pride"

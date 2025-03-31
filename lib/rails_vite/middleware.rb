@@ -4,13 +4,13 @@ require "faye/websocket"
 require_relative "http_proxy"
 require_relative "web_socket_proxy"
 
-module ViteRailsLink
+module RailsVite
   class Middleware
     def initialize(app)
       @app = app
       @dev_server = DevServer.new
-      @web_socket_proxy = ViteRailsLink::WebSocketProxy.new(@dev_server.config.server_host, @dev_server.config.server_port)
-      @http_proxy = ViteRailsLink::HttpProxy.new(@dev_server.config.server_host, @dev_server.config.server_port)
+      @web_socket_proxy = RailsVite::WebSocketProxy.new(@dev_server.config.server_host, @dev_server.config.server_port)
+      @http_proxy = RailsVite::HttpProxy.new(@dev_server.config.server_host, @dev_server.config.server_port)
     end
 
     def call(env)

@@ -3,7 +3,7 @@
 require "test_helper"
 require "rack/test"
 
-module ViteRailsLink
+module RailsVite
   class MiddlewareTest < Minitest::Test
     include Rack::Test::Methods
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ViteRailsLink
+module RailsVite
   module ViewHelper
     @@vite_manifest = nil
     @@manifest_last_modified = nil

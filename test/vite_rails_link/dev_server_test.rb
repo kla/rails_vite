@@ -10,9 +10,9 @@ require "json"
 class DevServerTest < Minitest::Test
   def setup
     # Create temporary files for testing
-    @lock_file = Tempfile.new("vite_rails_link_test_lock").path
-    @pid_file = Tempfile.new("vite_rails_link_test_pid").path
-    @log_file = Tempfile.new("vite_rails_link_test_log").path
+    @lock_file = Tempfile.new("rails_vite_test_lock").path
+    @pid_file = Tempfile.new("rails_vite_test_pid").path
+    @log_file = Tempfile.new("rails_vite_test_log").path
 
     # Set up a real configuration with test values
     @config = {
@@ -26,7 +26,7 @@ class DevServerTest < Minitest::Test
     # Only mock the Rails configuration
     Rails.stubs(:configuration).returns(OpenStruct.new(
       x: OpenStruct.new(
-        vite_rails_link: OpenStruct.new(@config)
+        rails_vite: OpenStruct.new(@config)
       )
     ))
 
@@ -37,9 +37,9 @@ class DevServerTest < Minitest::Test
     fixture_path = File.expand_path("../fixtures/vite.config.ts", __dir__)
 
     # Mock the config_file method to return our fixture path
-    ViteRailsLink::DevServerConfig.any_instance.stubs(:config_file).returns(Pathname.new(fixture_path))
+    RailsVite::DevServerConfig.any_instance.stubs(:config_file).returns(Pathname.new(fixture_path))
 
-    @dev_server = ViteRailsLink::DevServer.new
+    @dev_server = RailsVite::DevServer.new
   end
 
   def teardown
@@ -50,7 +50,7 @@ class DevServerTest < Minitest::Test
   end
 
   def test_initialize
-    assert_instance_of ViteRailsLink::DevServerConfig, @dev_server.config
+    assert_instance_of RailsVite::DevServerConfig, @dev_server.config
     assert_equal "0.0.0.0", @dev_server.config.server_host
     assert_equal 5173, @dev_server.config.server_port
     assert_equal "/vite", @dev_server.config.base
@@ -75,7 +75,7 @@ class DevServerTest < Minitest::Test
   end
 
   def test_ensure_running_when_auto_run_disabled
-    Rails.configuration.x.vite_rails_link.stubs(:dev_server_command).returns(nil)
+    Rails.configuration.x.rails_vite.stubs(:dev_server_command).returns(nil)
 
     # We shouldn't check the port when auto_run is disabled
     @dev_server.stubs(:port_open?).never

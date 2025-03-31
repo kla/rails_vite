@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    vite_rails_link (0.1.0)
+    rails_vite (0.1.0)
       faye-websocket (>= 0.11.0)
       railties (>= 6.0.0)
 
@@ -153,7 +153,7 @@ DEPENDENCIES
   mocha
   ostruct
   pry
-  vite_rails_link!
+  rails_vite!
 
 BUNDLED WITH
    2.6.2

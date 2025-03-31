@@ -2,7 +2,7 @@
 
 require "socket"
 
-module ViteRailsLink
+module RailsVite
   class DevServer
     attr_reader :config
 
@@ -11,7 +11,7 @@ module ViteRailsLink
     end
 
     def debug_log(type, message)
-      Rails.logger.debug("[#{self.class.name}] [#{type}] #{message}") if Rails.configuration.x.vite_rails_link.debug
+      Rails.logger.debug("[#{self.class.name}] [#{type}] #{message}") if Rails.configuration.x.rails_vite.debug
     end
 
     def target_uri(path, query_string)
@@ -24,15 +24,15 @@ module ViteRailsLink
     end
 
     def lock_file
-      Rails.configuration.x.vite_rails_link.lock_file.presence || Rails.root.join("tmp", "vite_dev_server.lock")
+      Rails.configuration.x.rails_vite.lock_file.presence || Rails.root.join("tmp", "vite_dev_server.lock")
     end
 
     def pid_file
-      Rails.configuration.x.vite_rails_link.pid_file.presence || Rails.root.join("tmp", "vite_dev_server.pid")
+      Rails.configuration.x.rails_vite.pid_file.presence || Rails.root.join("tmp", "vite_dev_server.pid")
     end
 
     def log_file
-      Rails.configuration.x.vite_rails_link.log_file.presence || Rails.root.join("log", "vite_dev_server.log")
+      Rails.configuration.x.rails_vite.log_file.presence || Rails.root.join("log", "vite_dev_server.log")
     end
 
     def ensure_running
@@ -142,7 +142,7 @@ module ViteRailsLink
     end
 
     def command
-      Rails.configuration.x.vite_rails_link.dev_server_command.presence
+      Rails.configuration.x.rails_vite.dev_server_command.presence
     end
 
     def launch_vite_server(pid_path)

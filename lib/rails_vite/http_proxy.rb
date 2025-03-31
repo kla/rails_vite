@@ -4,7 +4,7 @@ require "net/http"
 require "uri"
 require "rack"
 
-module ViteRailsLink
+module RailsVite
   # This is a stripped down version of https://github.com/ncr/rack-proxy
   class HttpProxy
     DEFAULT_READ_TIMEOUT = 60

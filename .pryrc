@@ -2,7 +2,7 @@
 $LOAD_PATH.unshift(File.expand_path("../lib", __FILE__))
 
 # Require the main library file
-require "vite_rails_link"
+require "rails_vite"
 
 # Set up Pry prompt (using current API)
 if defined?(Rails)

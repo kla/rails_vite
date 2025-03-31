@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 
-module ViteRailsLink
+module RailsVite
   # Simplified version of https://github.com/ncr/rack-proxy
   class WebSocketProxy
     KEEPALIVE_TIMEOUT = 15
@@ -84,7 +84,7 @@ module ViteRailsLink
     end
 
     def debug_log(message)
-      Rails.logger.debug("[#{self.class.name}] #{message}") if Rails.configuration.x.vite_rails_link.debug
+      Rails.logger.debug("[#{self.class.name}] #{message}") if Rails.configuration.x.rails_vite.debug
     end
   end
 end

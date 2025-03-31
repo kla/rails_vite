@@ -13,9 +13,9 @@ class DevServerConfigTest < Minitest::Test
     Rails.stubs(:root).returns(Pathname.new(File.expand_path("../", __dir__)))
 
     # Mock the config_file method to return our fixture path
-    ViteRailsLink::DevServerConfig.any_instance.stubs(:config_file).returns(Pathname.new(fixture_path))
+    RailsVite::DevServerConfig.any_instance.stubs(:config_file).returns(Pathname.new(fixture_path))
 
-    @config = ViteRailsLink::DevServerConfig.new
+    @config = RailsVite::DevServerConfig.new
   end
 
   def test_server_host
@@ -39,8 +39,8 @@ class DevServerConfigTest < Minitest::Test
       "base" => "/vite"
     }
 
-    ViteRailsLink::DevServerConfig.any_instance.stubs(read_config: config_without_host, running_in_docker?: false)
-    config = ViteRailsLink::DevServerConfig.new
+    RailsVite::DevServerConfig.any_instance.stubs(read_config: config_without_host, running_in_docker?: false)
+    config = RailsVite::DevServerConfig.new
 
     assert_equal "localhost", config.server_host
   end
@@ -55,8 +55,8 @@ class DevServerConfigTest < Minitest::Test
       "base" => "/vite"
     }
 
-    ViteRailsLink::DevServerConfig.any_instance.stubs(read_config: config_without_host, running_in_docker?: true)
-    config = ViteRailsLink::DevServerConfig.new
+    RailsVite::DevServerConfig.any_instance.stubs(read_config: config_without_host, running_in_docker?: true)
+    config = RailsVite::DevServerConfig.new
 
     assert_equal "0.0.0.0", config.server_host
   end
@@ -68,8 +68,8 @@ class DevServerConfigTest < Minitest::Test
       "base" => "/vite"
     }
 
-    ViteRailsLink::DevServerConfig.any_instance.stubs(:read_config).returns(config_without_port)
-    config = ViteRailsLink::DevServerConfig.new
+    RailsVite::DevServerConfig.any_instance.stubs(:read_config).returns(config_without_port)
+    config = RailsVite::DevServerConfig.new
 
     assert_equal 5173, config.server_port
   end
@@ -82,8 +82,8 @@ class DevServerConfigTest < Minitest::Test
       }
     }
 
-    ViteRailsLink::DevServerConfig.any_instance.stubs(:read_config).returns(config_without_base)
-    config = ViteRailsLink::DevServerConfig.new
+    RailsVite::DevServerConfig.any_instance.stubs(:read_config).returns(config_without_base)
+    config = RailsVite::DevServerConfig.new
 
     assert_raises(RuntimeError) do
       config.base
