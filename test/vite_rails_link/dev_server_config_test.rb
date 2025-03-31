@@ -11,6 +11,7 @@ class DevServerConfigTest < Minitest::Test
 
     # Set up Rails.root to point to our test directory for proper path resolution
     Rails.stubs(:root).returns(Pathname.new(File.expand_path("../", __dir__)))
+    Rails.stubs(configuration: OpenStruct.new(x: OpenStruct.new(rails_vite: OpenStruct.new(js_command: "node"))))
 
     # Mock the config_file method to return our fixture path
     RailsVite::DevServerConfig.any_instance.stubs(:config_file).returns(Pathname.new(fixture_path))
