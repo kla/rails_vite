@@ -9,4 +9,9 @@ namespace :rails_vite do
       puts "Vite dev server will restart automatically on next request."
     end
   end
+
+  desc "Build Vite assets"
+  task build: :environment do
+    RailsVite::Build.run
+  end
 end
