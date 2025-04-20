@@ -18,7 +18,10 @@ module RailsVite
 
     def read_config
       @read_config ||= begin
-        command = "#{js_command} #{__dir__}/dev_server_config_loader.js '#{config_file}'"
+        command =
+          "#{js_command} #{__dir__}/dev_server_config_loader.js '#{config_file}'"
+          .gsub("yarn node .*?\n", "")
+          .gsub("warning package.json: .*?\n", "")
         JSON.parse(`#{command}`)
       rescue => e
         raise "#{command} failed: #{e.message}"
