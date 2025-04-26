@@ -14,4 +14,10 @@ namespace :rails_vite do
   task build: :environment do
     RailsVite::Build.run
   end
+
+  if Rake::Task.task_defined?("assets:precompile")
+    Rake::Task["assets:precompile"].enhance do |task|
+      Rake::Task["rails_vite:build"].invoke
+    end
+  end
 end

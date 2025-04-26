@@ -11,13 +11,5 @@ module RailsVite
         include RailsVite::ViewHelper
       end
     end
-
-    initializer "rails_vite.assets" do
-      if defined?(Rake) && Rake.application.top_level_tasks.include?('assets:precompile')
-        Rake::Task["assets:precompile"].enhance do
-          Rake::Task["rails_vite:build"].invoke
-        end
-      end
-    end
   end
 end
