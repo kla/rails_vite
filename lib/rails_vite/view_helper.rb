@@ -5,6 +5,20 @@ module RailsVite
     @@vite_manifest = nil
     @@manifest_last_modified = nil
     @@manifest_mutex = Mutex.new
+    @@vite_base = nil
+
+    def vite_base
+      return @@vite_base if @@vite_base
+
+      @@manifest_mutex.synchronize do
+        return @@vite_base if @@vite_base
+
+        dev_server_config = RailsVite::DevServerConfig.new
+        @@vite_base = dev_server_config.base
+      rescue => e
+        @@vite_base = "/vite" # fallback
+      end
+    end
 
     def vite_manifest
       manifest_path = Rails.root.join("public/vite/.vite/manifest.json")
@@ -28,17 +42,17 @@ module RailsVite
     end
 
     def vite_client_tag
-      tag.script(type: "module", src: "/vite/@vite/client") unless Rails.env.production?
+      tag.script(type: "module", src: "#{vite_base}/@vite/client") unless Rails.env.production?
     end
 
     def vite_javascript_tag(name)
       name_with_ext = File.extname(name).empty? ? "#{name}.js" : name
 
       if Rails.env.production? && (manifest = vite_manifest[name_with_ext])
-        tag.script(type: "module", src: "/vite/#{manifest["file"]}") +
-          raw(manifest["css"].map { |css| tag.link(rel: "stylesheet", href: "/vite/#{css}") }.join("\n"))
+        tag.script(type: "module", src: "#{vite_base}/#{manifest["file"]}") +
+          raw(manifest["css"].map { |css| tag.link(rel: "stylesheet", href: "#{vite_base}/#{css}") }.join("\n"))
       else
-        tag.script(type: "module", src: "/vite/#{name_with_ext}")
+        tag.script(type: "module", src: "#{vite_base}/#{name_with_ext}")
       end
     end
   end
