@@ -14,6 +14,7 @@ module RailsVite
     end
 
     def relative_url_root
+      return nil unless defined?(Rails) && Rails.respond_to?(:application) && Rails.application
       Rails.application.config.relative_url_root
     end
 
